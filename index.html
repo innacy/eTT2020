@@ -216,7 +216,7 @@
                                     <li class="list-group-item">
                                         <span>Leave</span>
                                         <ul class="list-group mt-1">
-                                            <li class="list-group-item" v-for="(value, name, index) in projects">
+                                            <li style="cursor: pointer;" class="list-group-item" v-for="(value, name, index) in projects">
                                                 <a v-on:click="addTask(value)">{{value}}</a>
                                             </li>
                                         </ul>

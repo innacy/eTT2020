@@ -29,7 +29,8 @@ var app = new Vue({
         total: {},
         currentTask: {
             desc: "",
-            hours: 0
+            hours: 0,
+            status: ""
         },
         projects: [
             "Annual Leave",
@@ -94,11 +95,12 @@ var app = new Vue({
             const task = this.getTask(day, tid);
             if (task) {
                 this.currentTask = task;
-                this.currentTask.status = task.status;
+                this.currentTask.status = this.getStatus(day, tid);
                 this.currentTask.hours = this.getHours(day, tid);
                 this.currentTask.fromTime = moment(task.entry_start).format("HH:mm");
                 this.currentTask.toTime = moment(task.entry_end).format("HH:mm");
                 new bootstrap.Modal(document.getElementById('exampleModal'), {}).show();
+                console.log(this.currentTask.status);
             }
         },
         getTask: function(day, tid) {
@@ -119,7 +121,7 @@ var app = new Vue({
             }
         },
         getStatus: function(day, tid) {
-            return (this.dayEntries[day].tasks && this.dayEntries[day].tasks[tid]) ? this.dayEntries[day].tasks[tid].status : 'pending';
+            return (this.dayEntries[day].tasks && this.dayEntries[day].tasks[tid]) ? this.dayEntries[day].tasks[tid].entry_status : 'pending';
         },
         winWidth: function() {
             var w = window.innerWidth;
@@ -236,7 +238,7 @@ var app = new Vue({
             this.task.project_id = 1;
             this.task.project = "Leave";
 
-            this.taskassignee.id = Math.floor(Math.random() * Math.floor(1000));
+            this.taskassignee.task_assignee_id = Math.floor(Math.random() * Math.floor(1000));
             this.taskassignee.task_id = this.task.task_id;
             this.taskassignee.employee_id = 111;
 
@@ -251,7 +253,8 @@ var app = new Vue({
                     console.log(response)
                 }).catch(error => { console.log(error); });
             this.$forceUpdate();
-            bootstrap.Modal.getInstance(document.getElementById('tasksModal')).hide()
+            this.dateloader();
+            bootstrap.Modal.getInstance(document.getElementById('tasksModal')).hide();
         },
         createEntry: function() {
             axios.post('http://localhost:9000/entry/add_entry', this.entry)
