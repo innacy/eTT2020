@@ -239,18 +239,18 @@
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label for="exampleInputEmail1" class="form-label">Time spent</label>
-                                <input type="number" v-model="currentTask.hours" @input="addModalEvent" @change="addModalEvent" class="form-control" id="exampleInputEmail1" aria-describedby="timeHelp">
+                                <input type="number" v-model="currentTask.hours" @change="addModalEvent" class="form-control" id="exampleInputEmail1" aria-describedby="timeHelp">
                                 <div id="timeHelp" class="form-text">Time spent in hours 3 / 3.5</div>
                             </div>
                             <div class="mb-3">
                                 <div class="row">
                                     <div class="col">
                                         <label for="exampleInputEmail1" class="form-label">From Time</label>
-                                        <input type="time" class="form-control" id="exampleInputEmail1" aria-describedby="timeHelp" @input="addModalEvent" @change="addModalEvent" v-model="currentTask.fromTime">
+                                        <input type="time" class="form-control" id="exampleInputEmail1" aria-describedby="timeHelp" @change="addModalEvent" v-model="currentTask.fromTime">
                                     </div>
                                     <div class="col">
                                         <label for="exampleInputEmail1" class="form-label">To Time</label>
-                                        <input type="time" class="form-control" id="exampleInputEmail2" aria-describedby="timeHelp" disabled @input="addModalEvent" @change="addModalEvent" v-model="currentTask.toTime">
+                                        <input type="time" class="form-control" id="exampleInputEmail2" aria-describedby="timeHelp" disabled @change="addModalEvent" v-model="currentTask.toTime">
                                     </div>
                                 </div>
                             </div>
@@ -260,7 +260,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="exampleInputPassword1" class="form-label">Status</label>
-                                <select name="status" id="status" class="form-control" @input="addModalEvent" @change="addModalEvent" v-model="currentTask.status">
+                                <select name="status" id="status" class="form-control" @change="addModalEvent" v-model="currentTask.status">
                   <option value="pending">Pending</option>
                   <option value="rejected">Rejected</option>
                   <option value="approved">Approved</option>

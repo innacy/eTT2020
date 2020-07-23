@@ -99,8 +99,9 @@ var app = new Vue({
                 this.currentTask.hours = this.getHours(day, tid);
                 this.currentTask.fromTime = moment(task.entry_start).format("HH:mm");
                 this.currentTask.toTime = moment(task.entry_end).format("HH:mm");
+                //console.log(this.currentTask.fromTime, this.currentTask.toTime)
+                this.$forceUpdate();
                 new bootstrap.Modal(document.getElementById('exampleModal'), {}).show();
-                console.log(this.currentTask.status);
             }
         },
         getTask: function(day, tid) {
@@ -154,7 +155,6 @@ var app = new Vue({
             if (val >= 0) {
                 if (val > 0 && !this.dayEntries[target.dataset.day].tasks[target.dataset.key]) {
                     //create new entry and process
-                    this.entry.entry_id = Math.floor(Math.random() * Math.floor(1000));
                     this.entry.task_id = parseInt(target.dataset.key);
                     this.entry.employee_id = 111;
                     this.entry.entry_date = this.dayEntries[target.dataset.day].date_f2;
@@ -163,11 +163,12 @@ var app = new Vue({
                     this.entry.minutes = val * 60;
                     this.entry.entry_status = "pending";
                     this.createEntry();
-                    this.dayEntries[target.dataset.day].tasks[target.dataset.key] = this.entry;
-                    this.entries.push(this.entry);
                 } else if (val >= 0 && this.dayEntries[target.dataset.day].tasks[target.dataset.key]) {
                     //update existing entry
                     this.dayEntries[target.dataset.day].tasks[target.dataset.key].minutes = val * 60;
+                    this.dayEntries[target.dataset.day].tasks[target.dataset.key].entry_start = moment().format();
+                    this.dayEntries[target.dataset.day].tasks[target.dataset.key].entry_end = moment().add(val, 'hours').format();
+
                     this.entry.entry_id = this.dayEntries[target.dataset.day].tasks[target.dataset.key].entry_id;
                     this.entry.task_id = parseInt(target.dataset.key);
                     this.entry.employee_id = this.dayEntries[target.dataset.day].tasks[target.dataset.key].employee_id;
@@ -178,6 +179,7 @@ var app = new Vue({
                     this.entry.entry_status = "pending";
                     this.updateEntry(this.entry.entry_id);
                 }
+                this.$forceUpdate();
                 this.calculateTotal(target.dataset.day);
             }
         },
@@ -201,6 +203,7 @@ var app = new Vue({
                     this.updateEntry(e.entry_id);
                 }
             });
+            this.$forceUpdate();
             this.dateloader();
         },
         openTasksModal: function() {
@@ -229,8 +232,7 @@ var app = new Vue({
             this.loading = false;
         },
         addTask: function(t) {
-            this.task.task_id = Math.floor(Math.random() * Math.floor(1000));
-            this.task.ticket_id = "ticket";
+            this.task.ticket_id = "Leave ticket";
             this.task.summary = t;
             this.task.task_start_date = moment().format();
             this.task.task_end_date = moment().add(9, 'h').format();
@@ -238,34 +240,51 @@ var app = new Vue({
             this.task.project_id = 1;
             this.task.project = "Leave";
 
-            this.taskassignee.task_assignee_id = Math.floor(Math.random() * Math.floor(1000));
-            this.taskassignee.task_id = this.task.task_id;
-            this.taskassignee.employee_id = 111;
-
             axios.post('http://localhost:9000/task/add_task', this.task)
                 .then(response => {
+                    this.taskassignee.task_id = response.data.statuscode;
+                    this.taskassignee.employee_id = 111;
                     axios.post('http://localhost:9000/task_assignee/add_task_assignee', this.taskassignee)
                         .then(response => {
-                            this.tasks[this.task.task_id] = this.task
-                            this.selectedTasks.push(this.task.task_id)
+                            this.tasks = {}
+                            this.selectedTasks = []
+                            this.getEmployeeTask()
                             console.log(response)
                         }).catch(error => { console.log(error); });
-                    console.log(response)
                 }).catch(error => { console.log(error); });
             this.$forceUpdate();
-            this.dateloader();
             bootstrap.Modal.getInstance(document.getElementById('tasksModal')).hide();
         },
         createEntry: function() {
             axios.post('http://localhost:9000/entry/add_entry', this.entry)
                 .then(response => {
                     console.log(response)
+                    this.getEmployeeEntry();
                 }).catch(error => { console.log(error); });
         },
         updateEntry: function(entryid) {
             axios.put('http://localhost:9000/entry/update_entry/' + entryid, this.entry)
                 .then(response => {
                     console.log(response)
+                }).catch(error => { console.log(error); });
+        },
+        getEmployeeEntry: function() {
+            axios.get('http://localhost:9000/entry/get_employee_entry/' + 111)
+                .then(response => {
+                    response.data.Entries.forEach(r => {
+                        this.entries[r.entry_id] = r
+                    })
+                    this.dateloader();
+                }).catch(error => { console.log(error); });
+        },
+        getEmployeeTask: function() {
+            axios.get('http://localhost:9000/task/get_employee_task/' + 111)
+                .then(response => {
+                    response.data.Tasks.forEach(r => {
+                        this.tasks[r.task_id] = r
+                        this.selectedTasks.push(r.task_id)
+                    })
+                    this.dateloader();
                 }).catch(error => { console.log(error); });
         }
     },
