@@ -41,8 +41,7 @@ var app = new Vue({
         tasks: {},
         task: {},
         entries: [],
-        entry: {},
-        taskassignee: {}
+        entry: {}
     },
     methods: {
         dateSelected: function(date) {
@@ -239,18 +238,14 @@ var app = new Vue({
             this.task.task_estimated_minutes = 540;
             this.task.project_id = 1;
             this.task.project = "Leave";
+            this.task.assignees = ["Aswanth"]
 
             axios.post('http://localhost:9000/task/add_task', this.task)
                 .then(response => {
-                    this.taskassignee.task_id = response.data.statuscode;
-                    this.taskassignee.employee_id = 111;
-                    axios.post('http://localhost:9000/task_assignee/add_task_assignee', this.taskassignee)
-                        .then(response => {
-                            this.tasks = {}
-                            this.selectedTasks = []
-                            this.getEmployeeTask()
-                            console.log(response)
-                        }).catch(error => { console.log(error); });
+                    this.tasks = {}
+                    this.selectedTasks = []
+                    this.getEmployeeTask()
+                    console.log(response)
                 }).catch(error => { console.log(error); });
             this.$forceUpdate();
             bootstrap.Modal.getInstance(document.getElementById('tasksModal')).hide();
