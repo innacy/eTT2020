@@ -288,7 +288,7 @@ var app = new Vue({
         }
     },
     mounted() {
-        axios.get('http://localhost:9000/task/get_employee_task/' + 101)
+        axios.get('http://localhost:9000/task/get_employee_task/' + 111)
             .then(response => {
                 if (response.data.Tasks != null) {
                     response.data.Tasks.forEach(r => {
@@ -297,7 +297,7 @@ var app = new Vue({
                     })
                 }
             }).catch(error => { console.log(error); });
-        axios.get('http://localhost:9000/entry/get_employee_entry/' + 101)
+        axios.get('http://localhost:9000/entry/get_employee_entry/' + 111)
             .then(response => {
                 if (response.data.Entries != null) {
                     response.data.Entries.forEach(r => {
