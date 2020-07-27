@@ -266,36 +266,44 @@ var app = new Vue({
         getEmployeeEntry: function() {
             axios.get('http://localhost:9000/entry/get_employee_entry/' + 111)
                 .then(response => {
-                    response.data.Entries.forEach(r => {
-                        this.entries[r.entry_id] = r
-                    })
+                    if (response.data.Entries != null) {
+                        response.data.Entries.forEach(r => {
+                            this.entries[r.entry_id] = r
+                        })
+                    }
                     this.dateloader();
                 }).catch(error => { console.log(error); });
         },
         getEmployeeTask: function() {
             axios.get('http://localhost:9000/task/get_employee_task/' + 111)
                 .then(response => {
-                    response.data.Tasks.forEach(r => {
-                        this.tasks[r.task_id] = r
-                        this.selectedTasks.push(r.task_id)
-                    })
+                    if (response.data.Tasks != null) {
+                        response.data.Tasks.forEach(r => {
+                            this.tasks[r.task_id] = r
+                            this.selectedTasks.push(r.task_id)
+                        })
+                    }
                     this.dateloader();
                 }).catch(error => { console.log(error); });
         }
     },
     mounted() {
-        axios.get('http://localhost:9000/task/get_employee_task/' + 111)
+        axios.get('http://localhost:9000/task/get_employee_task/' + 101)
             .then(response => {
-                response.data.Tasks.forEach(r => {
-                    this.tasks[r.task_id] = r
-                    this.selectedTasks.push(r.task_id)
-                })
+                if (response.data.Tasks != null) {
+                    response.data.Tasks.forEach(r => {
+                        this.tasks[r.task_id] = r
+                        this.selectedTasks.push(r.task_id)
+                    })
+                }
             }).catch(error => { console.log(error); });
-        axios.get('http://localhost:9000/entry/get_employee_entry/' + 111)
+        axios.get('http://localhost:9000/entry/get_employee_entry/' + 101)
             .then(response => {
-                response.data.Entries.forEach(r => {
-                    this.entries[r.entry_id] = r
-                })
+                if (response.data.Entries != null) {
+                    response.data.Entries.forEach(r => {
+                        this.entries[r.entry_id] = r
+                    })
+                }
                 this.weeklyDatePicker = moment(new Date()).format("YYYY-MM-DD");
                 this.dateloader();
             }).catch(error => { console.log(error); });
