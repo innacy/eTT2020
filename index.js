@@ -144,7 +144,7 @@ var app = new Vue({
             this.showView = day;
         },
         addEvent({ type, target }) {
-            this.loading = false;
+            this.loading = true;
             var val = -1;
             if (parseFloat(target.value) >= 0) {
                 val = target.value
@@ -306,6 +306,7 @@ var app = new Vue({
                 }
                 this.weeklyDatePicker = moment(new Date()).format("YYYY-MM-DD");
                 this.dateloader();
+                this.loading = false;
             }).catch(error => { console.log(error); });
         this.winWidth()
     }
