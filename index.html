@@ -9,6 +9,8 @@
 
     <!-- Bootstrap core CSS -->
     <link href="assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Loading css -->
+    <link href="assets/dist/css/vue-loading.css" rel="stylesheet">
 
 
     <style>
@@ -72,7 +74,7 @@
 
     <!-- Begin page content -->
     <main class="flex-shrink-0">
-        <div class="container" id="employee-weekly-entry" v-if="!loading">
+        <div class="container" id="employee-weekly-entry" v-if="loading">
             <div class="row mt-5">
                 <div class="col">
                     <h1>Timesheet</h1>
@@ -109,7 +111,7 @@
                     </div>
                 </div>
             </div> -->
-            <table class="table table-bordered" v-if="!loading">
+            <table class="table table-bordered" v-if="loading">
                 <thead>
                     <tr style=" background: rgb(66, 56, 157);color: white;" v-show="!mobileView">
                         <th class="align-middle" scope="col">Project / Activity</th>

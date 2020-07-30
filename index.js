@@ -4,7 +4,7 @@ var app = new Vue({
         vuejsDatepicker
     },
     data: {
-        loading: true,
+        loading: false,
         weeklyDatePicker: '',
         week: '',
         mon: '',
@@ -88,6 +88,7 @@ var app = new Vue({
                 });
                 this.calculateTotal(d);
             });
+            this.loading = true;
             console.log(this.dayEntries)
         },
         openDetailsModal: function(day, tid) {
@@ -144,7 +145,6 @@ var app = new Vue({
             this.showView = day;
         },
         addEvent({ type, target }) {
-            this.loading = true;
             var val = -1;
             if (parseFloat(target.value) >= 0) {
                 val = target.value
@@ -183,6 +183,7 @@ var app = new Vue({
             }
         },
         addModalEvent: function() {
+            this.loading = false;
             this.entries.forEach(e => {
                 if (e.entry_date == this.currentTask.entry_date && e.task_id == this.currentTask.task_id) {
                     this.currentTask.toTime = moment(this.currentTask.fromTime, "HH:mm").add(this.currentTask.hours, 'h').format("HH:mm")
@@ -228,7 +229,6 @@ var app = new Vue({
             s = s.concat((md._data.minutes > 0) ? md._data.minutes + "m " : "");
             this.total[day] = s;
             this.$forceUpdate();
-            this.loading = false;
         },
         addTask: function(t) {
             this.task.ticket_id = "Leave ticket";
@@ -306,7 +306,6 @@ var app = new Vue({
                 }
                 this.weeklyDatePicker = moment(new Date()).format("YYYY-MM-DD");
                 this.dateloader();
-                this.loading = false;
             }).catch(error => { console.log(error); });
         this.winWidth()
     }
